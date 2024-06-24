@@ -19,6 +19,7 @@ const PostsPage = () => {
     const [loading, setLoading] = useState(false)
     const [refreshing, setRefreshing] = useState(false)
     const [fetching, setFetching] = useState(false)
+    const [searchText, setSearchText] = useState("")
 
     const getData = async () => {
         setFetching(true)
@@ -55,7 +56,7 @@ const PostsPage = () => {
         }
 
         const searchText = text.toLowerCase(); // Convert search text to lowercase
-        const filteredPosts = posts.filter((post) => {
+        const filteredPosts = postsBackup.filter((post) => {
             const titleMatch = post.title.toLowerCase().includes(searchText);
             const bodyMatch = post.body.toLowerCase().includes(searchText);
             return titleMatch || bodyMatch;
@@ -67,6 +68,10 @@ const PostsPage = () => {
     useEffect(() => {
         getData()
     }, [])
+
+    useEffect(()=>{
+        handleSearch(searchText.trim())
+    }, [searchText])
 
     return (
         <ThemedView style={twrnc`flex-1 p-6`}>
@@ -80,7 +85,7 @@ const PostsPage = () => {
                     <ThemedText style={twrnc`text-lg font-bold`}>Posts</ThemedText>
                     <ThemedView style={twrnc`w-full relative`}>
                         <Ionicons name="search" size={24} color={"gray"} style={twrnc`absolute left-16 top-[10px] z-10`} />
-                        <TextInput onChangeText={(text) => handleSearch(text.trim())} cursorColor={"gray"} style={twrnc`bg-gray-200 ml-auto mr-12 rounded-full p-2 px-10 w-[70%]`} placeholder="Seach posts..." />
+                        <TextInput value={searchText} onChangeText={(text) => setSearchText(text)} cursorColor={"gray"} style={twrnc`bg-gray-200 ml-auto mr-12 rounded-full p-2 px-10 w-[70%]`} placeholder="Seach posts..." />
                     </ThemedView>
                 </ThemedView>
             </ThemedView>
